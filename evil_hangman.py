@@ -9,24 +9,6 @@ def print_greeting():
     print("------------------------------------------------------------")
 
 
-def validate_level(level):
-    if level not in ["E", "N", "H"]:
-        print("INVALID CHOICE! Valid Options are: E,e,N,n,H,h")
-        return False
-    else:
-        return True
-
-
-def get_level():
-    while True:
-        print("Enter the level desired")
-        level_read = input("E/e for easy, N/n for normal, H/h for hard  ")
-        level_read = level_read.upper()
-        pass_level = validate_level(level_read)
-        if pass_level is True:
-            return level_read
-
-
 def print_word_status(word, tries):
     print("-----------------------------------------------")
     print("You have {} guesses remaining".format(8 - tries))
