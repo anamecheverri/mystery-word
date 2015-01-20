@@ -28,32 +28,27 @@ def get_level():
             return level_read
 
 
-def select_random_word(level):
-    file_location = open("/usr/share/dict/words")
-    file_content = file_location.read()
-    words = file_content.split()
-    file_location.close()
+def select_random_word(level,words):
     if level == 'E':
-        min_len = 4
-        max_len = 6
-    elif level == 'N':
-        min_len = 6
-        max_len = 10
-    else:
-        min_len = 10
-        max_len = 50
-    while True:
-        word = (words[randint(0, len(words)-1)])
-        if (len(word) >= min_len and len(word) <= max_len):
-            return(word.upper())
+        easy_words = [word for word in words
+                      if len(word) >= 4 and len(word) <= 6]
+        word = (easy_words[randint(0, len(easy_words)-1)])
+    if level == 'N':
+        normal_words = [word for word in words
+                        if len(word) >= 6 and len(word) <= 10]
+        word = (normal_words[randint(0, len(normal_words)-1)])
+    if level == 'H':
+        hard_words = [word for word in words if len(word) >= 10]
+        word = (hard_words[randint(0, len(hard_words)-1)])
+    return(word.upper())
 
 
 def print_word_status(word, tries):
     print("-----------------------------------------------")
-    print("You have {} guesses remaining".format(8 - tries))
     print("Used Letters: {}".format(",".join(characters_read)))
     print("Your current word:", ''.join(word))
     print("-----------------------------------------------")
+    print("You have {} guesses remaining".format(8 - tries))
 
 
 def valid_letter(letter, chars_read):
@@ -96,24 +91,31 @@ def update_word(letter, word, wip):
 if __name__ == '__main__':
     print_greeting()
     play = True
+    file_location = open("/usr/share/dict/words")
+    file_content = file_location.read()
+    words = file_content.split()
+    file_location.close()
     while play is True:
         tries = 0
         success = False
         characters_read = []
         word_in_process = []
         level = get_level()
-        random_word = select_random_word(level)
-        print(random_word)
+        random_word = select_random_word(level,words)
         random_word_length = len(random_word)
         print("Your word has {} letters".format(random_word_length))
         word_in_process = ['-']*random_word_length
         while success is not True and tries < 8:
             print_word_status(word_in_process, tries)
             letter = get_letter(characters_read)
-            word_in_process = update_word(letter, random_word, word_in_process)
-            if ''.join(word_in_process) == random_word:
-                success = True
-            tries += 1
+            if random_word.count(letter) > 0:
+                word_in_process = update_word(letter,
+                                              random_word,
+                                              word_in_process)
+                if ''.join(word_in_process) == random_word:
+                    success = True
+            else:
+                tries += 1
         if success is True:
             print("CONGRATULATIONS. You win!")
         else:
