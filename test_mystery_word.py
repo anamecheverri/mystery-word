@@ -3,18 +3,18 @@ import evil_hangman as evil
 
 
 def test_validate_level():
-    assert (myt.validate_level("E") is True or
-            myt.validate_level("N") is True or
-            myt.validate_level("H") is True)
+    assert myt.validate_level("E") is True
+    assert myt.validate_level("N") is True
+    assert myt.validate_level("H") is True
     assert myt.validate_level("U") is False
 
 
 def test_select_random_word():
-    word = myt.select_random_word("E")
+    word = myt.select_random_word("E", ["ana", "maria"])
     assert len(word) >= 4 and len(word) <= 6
-    word = myt.select_random_word("N")
+    word = myt.select_random_word("N", ["calculus", "mathematics"])
     assert len(word) >= 6 and len(word) <= 10
-    word = myt.select_random_word("H")
+    word = myt.select_random_word("H", ["trigonometry", "gastroenterology"])
     assert len(word) >= 10
 
 
