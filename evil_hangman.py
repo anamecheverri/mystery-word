@@ -11,10 +11,10 @@ def print_greeting():
 
 def print_word_status(word, tries):
     print("-----------------------------------------------")
-    print("You have {} guesses remaining".format(8 - tries))
     print("Used Letters: {}".format(",".join(characters_read)))
     print("Your current word:", ''.join(word))
     print("-----------------------------------------------")
+    print("You have {} guesses remaining".format(8 - tries))
 
 
 def valid_letter(letter, chars_read):
@@ -82,6 +82,7 @@ def evil_new_list(letter, currentlist, wip):
     #  wip: the word currently being built. Empty word of the type "---"
     #   at the beginning. As letters are matched, word is re-built
     dictoptions = {}
+    found_match = False
     # This for loop goes over all words in the current list and
     # classifies them according to the match pattern
     for word in currentlist:
@@ -103,9 +104,9 @@ def evil_new_list(letter, currentlist, wip):
     # But if there are more options to create new word lists, it returns
     # the list with the most words and the corresponding pattern to that list
     if len(dictoptions) == 0:
-        return(currentlist, thelist)
+        return (wip, currentlist)
     else:
-        return max_list(dictoptions)
+        return (max_list(dictoptions))
 
 
 if __name__ == '__main__':
@@ -139,15 +140,16 @@ if __name__ == '__main__':
         print("Your word has {} letters".format(random_length))
     # Game will ask for a letter giving the player 8 tries
         while success is not True and tries < 8:
+            print_word_status(word_in_process, tries)
             letter = get_letter(characters_read)
             evil_next_step = evil_new_list(letter, word_list, word_in_process)
+            if evil_next_step[0] == ''.join(word_in_process):
+                tries += 1
             word_in_process = list(evil_next_step[0])
             word_list = list(evil_next_step[1])
-            print_word_status(word_in_process, tries)
             if ''.join(word_in_process).count('-') == 0:
                 print("wow! you won!!")
                 success = True
-            tries += 1
         if success is False:
             print("SORRY!!! Better luck next time")
         print("The word was {}".format(word_list[0]))
